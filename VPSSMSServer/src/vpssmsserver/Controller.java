@@ -1149,6 +1149,42 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
     }
 
     @Override
+    public boolean updateSchoolAttended(SchoolAttended school) throws RemoteException {
+        boolean updated = false;
+        Connection connection = null;
+        try {
+            connection = connectToDB();
+            PreparedStatement updateSchool = connection.prepareStatement("update AttendedSchool set "
+                    + " StudentId=?,"
+                    + "Name=?,"
+                    + "Duration=?,"
+                    + "UOM=?,"
+                    + "Qualification=?,"
+                    + "ReasonForChange=?,"
+                    + "Status=? where SchoolId=?");
+            updateSchool.setString(1, school.getStudentId());
+            updateSchool.setString(2, school.getName());
+            updateSchool.setInt(3, school.getDuration());
+            updateSchool.setString(4, school.getUOM());
+            updateSchool.setString(5, school.getQualification());
+            updateSchool.setString(6, school.getReasonForChange());
+            updateSchool.setString(7, school.getStatus());
+            updateSchool.setString(8, school.getSchoolId());
+            int updateResult = updateSchool.executeUpdate();
+            if (updateResult > 0) {
+                updated = true;
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage() + "\n updateSchoolAttended");
+        } finally {
+            this.closeConnection(connection);
+        }
+        return updated;
+
+    }
+
+    @Override
     public boolean createStudentClass(StudentClass studentClass) throws RemoteException {
         boolean created = false;
         Connection connection = null;
@@ -1176,21 +1212,48 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
     }
 
     @Override
+    public boolean updateStudentClass(StudentClass studentClass) throws RemoteException {
+        boolean updated = false;
+        Connection connection = null;
+        try {
+            connection = connectToDB();
+            PreparedStatement updateClass = connection.prepareStatement("update StudentClass set "
+                    + "Name=?,"
+                    + "Status=?,"
+                    + "CreationDate=? where ClassId=? ");
+
+            updateClass.setString(1, studentClass.getName());
+            updateClass.setString(2, studentClass.getStatus());
+            updateClass.setString(3, studentClass.getDate());
+            updateClass.setString(4, studentClass.getClassId());
+            int updateResult = updateClass.executeUpdate();
+            if (updateResult > 0) {
+                updated = true;
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            this.closeConnection(connection);
+        }
+        return updated;
+    }
+
+    @Override
     public boolean createClassStream(ClassStream stream) throws RemoteException {
         boolean created = false;
         Connection connection = null;
         try {
             connection = connectToDB();
-            PreparedStatement createClass = connection.prepareStatement("insert into ClassStream("
+            PreparedStatement createStream = connection.prepareStatement("insert into ClassStream("
                     + "StreamId,"
                     + "Name,"
                     + "Status,"
                     + "CreationDate) values(?,?,?,?)");
-            createClass.setString(1, stream.getStreamId());
-            createClass.setString(2, stream.getName());
-            createClass.setString(3, stream.getStatus());
-            createClass.setString(4, stream.getDate());
-            int creatResult = createClass.executeUpdate();
+            createStream.setString(1, stream.getStreamId());
+            createStream.setString(2, stream.getName());
+            createStream.setString(3, stream.getStatus());
+            createStream.setString(4, stream.getDate());
+            int creatResult = createStream.executeUpdate();
             if (creatResult > 0) {
                 created = true;
             }
@@ -1200,6 +1263,32 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
             this.closeConnection(connection);
         }
         return created;
+    }
+
+    @Override
+    public boolean updateClassStream(ClassStream stream) throws RemoteException {
+        boolean updated = false;
+        Connection connection = null;
+        try {
+            connection = connectToDB();
+            PreparedStatement updateStream = connection.prepareStatement("update ClassStream set "
+                    + "Name=?,"
+                    + "Status=?,"
+                    + "CreationDate=? where StreamId=?");
+            updateStream.setString(1, stream.getName());
+            updateStream.setString(2, stream.getStatus());
+            updateStream.setString(3, stream.getDate());
+            updateStream.setString(4, stream.getStreamId());
+            int updateResult = updateStream.executeUpdate();
+            if (updateResult > 0) {
+                updated = true;
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            this.closeConnection(connection);
+        }
+        return updated;
     }
 
     @Override
@@ -1235,6 +1324,39 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
         }
         return registered;
     }
+    @Override
+    public boolean updateClassStreamRegister(ClassStreamRegister register) throws RemoteException{
+    boolean updated = false;
+        Connection connection = null;
+        try {
+            connection = connectToDB();
+            PreparedStatement updateRegister = connection.prepareStatement("update ClassStreamRegister set "
+                    + "ClassId=?,"
+                    + "StreamId=?,"
+                    + "Term=?,"
+                    + "AcademicYear=?,"
+                    + "Status=?,"
+                    + "CreationDate=? where RegisterId=?");
+            
+            updateRegister.setString(1, register.getClassId());
+            updateRegister.setString(2, register.getStreamId());
+            updateRegister.setString(3, register.getTerm());
+            updateRegister.setString(4, register.getYear());
+            updateRegister.setString(5, register.getStatus());
+            updateRegister.setString(6, register.getDate());
+            updateRegister.setString(7, register.getRegisterId());
+            int updateResult = updateRegister.executeUpdate();
+            if (updateResult > 0) {
+                updated = true;
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage()+"\n ERROR from updateClassStream Method");
+        } finally {
+            this.closeConnection(connection);
+        }
+        return updated;
+    }
 
     @Override
     public boolean registerOldStudent(StudentRegister register) throws RemoteException {
@@ -1267,6 +1389,39 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
             this.closeConnection(connection);
         }
         return registered;
+    }
+
+    @Override
+    public boolean updateOldStudent(StudentRegister register) throws RemoteException {
+        boolean updated = false;
+        Connection connection = null;
+        try {
+            connection = connectToDB();
+            PreparedStatement updateRegister = connection.prepareStatement("Update  StudentRegister set "
+                    + " StudentId=?,"
+                    + "ClassId=?,"
+                    + "StreamId=?,"
+                    + "AcademicTerm=?,"
+                    + "AcademicYear=?,"
+                    + "Status=? where RegisterId=?");
+
+            updateRegister.setString(1, register.getStudentId());
+            updateRegister.setString(2, register.getClassId());
+            updateRegister.setString(3, register.getStreamId());
+            updateRegister.setString(4, register.getAcademicTerm());
+            updateRegister.setString(5, register.getAcademicYear());
+            updateRegister.setString(6, register.getStatus());
+            updateRegister.setString(7, register.getRegisterId());
+            int updateResult = updateRegister.executeUpdate();
+            if (updateResult > 0) {
+                updated = true;
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage() + "\n ERROR from updateOldStudent");
+        } finally {
+            this.closeConnection(connection);
+        }
+        return updated;
     }
 
     @Override
@@ -1575,7 +1730,7 @@ public class Controller extends UnicastRemoteObject implements ServerStub {
         /*try {
         String databaseCreated = new DerbyConnection().createDB();
         if (databaseCreated.equalsIgnoreCase("true")) {
-        created = true;
+        updated = true;
         }
         } catch (Exception ex) {
         System.out.println(ex.getMessage());

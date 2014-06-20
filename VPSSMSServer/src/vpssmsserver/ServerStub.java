@@ -27,17 +27,28 @@ public interface ServerStub extends Remote {
     public boolean updateParent(Parent parent) throws RemoteException;
 
     public boolean registerGuardian(Guardian guardian) throws RemoteException;
+
     public boolean updateGuardian(Guardian guardian) throws RemoteException;
 
     public boolean registerSchoolAttended(SchoolAttended school) throws RemoteException;
 
+    public boolean updateSchoolAttended(SchoolAttended school) throws RemoteException;
+
     public boolean registerClassStream(ClassStreamRegister register) throws RemoteException;
+
+    public boolean updateClassStreamRegister(ClassStreamRegister register) throws RemoteException;
 
     public boolean registerOldStudent(StudentRegister register) throws RemoteException;
 
+    public boolean updateOldStudent(StudentRegister register) throws RemoteException;
+
     public boolean createStudentClass(StudentClass studentClass) throws RemoteException;
 
+    public boolean updateStudentClass(StudentClass studentClass) throws RemoteException;
+
     public boolean createClassStream(ClassStream stream) throws RemoteException;
+
+    public boolean updateClassStream(ClassStream stream) throws RemoteException;
 
     public boolean createSubject(Subject subject) throws RemoteException;
 
@@ -90,7 +101,8 @@ public interface ServerStub extends Remote {
     public ArrayList<SubjectPaperRegister> getSubjectPaperRegisterist() throws RemoteException;
 
     public ArrayList<StudentResult> getStudentResult() throws RemoteException;
-    public String getStudentId(String Id,String table,String field)throws RemoteException;
+
+    public String getStudentId(String Id, String table, String field) throws RemoteException;
 
     public boolean updateRecordStatus(String id, String tableName, String primaryKey) throws RemoteException;
 
